@@ -13,10 +13,10 @@ import cv2
 import numpy as np
 from torch.utils.data import Dataset
 
-from pysot.utils.bbox import center2corner, Center
-from pysot.datasets.anchor_target import AnchorTarget
-from pysot.datasets.augmentation import Augmentation
-from pysot.core.config import cfg
+from utils.bbox import center2corner, Center
+from utils.anchor_target import AnchorTarget
+from utils.augmentation import Augmentation
+from utils.config import cfg
 
 logger = logging.getLogger("global")
 
@@ -29,15 +29,16 @@ if pyv[0] == '3':
 class SubDataset(object):
     def __init__(self, name, root, anno, frame_range, num_use, start_idx):
         cur_path = os.path.dirname(os.path.realpath(__file__))
+        cur_path="F:\deeplearning\siamrpn-lightweight\\"
         self.name = name
-        self.root = os.path.join(cur_path, '../../', root)
-        self.anno = os.path.join(cur_path, '../../', anno)
+        self.root = os.path.join(cur_path,  root)
+        self.anno = os.path.join(cur_path,  anno)
         self.frame_range = frame_range
         self.num_use = num_use
         self.start_idx = start_idx
         logger.info("loading " + name)
 
-        self.anno="F:\\deeplearning\\pysot-master\\training_dataset\coco\\val2017.json"
+        self.anno="F:\deeplearning\siamrpn-lightweight\\training_dataset\coco\\val2017.json"
         with open(self.anno, 'r') as f:
             meta_data = json.load(f)
             meta_data = self._filter_zero(meta_data)
@@ -105,6 +106,7 @@ class SubDataset(object):
 
     def get_image_anno(self, video, track, frame):
         frame = "{:06d}".format(frame)
+
         image_path = os.path.join(self.root, video,
                                   self.path_format.format(frame, track, 'x'))
         image_anno = self.labels[video][track][frame]
@@ -250,9 +252,11 @@ class TrkDataset(Dataset):
             template, search = dataset.get_positive_pair(index)
 
         # get image
+        # template[0]=os.path.join("F:\\deeplearning\\pysot-master",template[0].split("F:\\deeplearning\\siamrpn-lightweight\\utils\\../../")[-1])
+        # search[0] = os.path.join("F:\\deeplearning\\pysot-master",search[0].split("F:\\deeplearning\\siamrpn-lightweight\\utils\\../../")[-1])
+
         template_image = cv2.imread(template[0])
         search_image = cv2.imread(search[0])
-
         # get bounding box
         template_box = self._get_bbox(template_image, template[1])
         search_box = self._get_bbox(search_image, search[1])

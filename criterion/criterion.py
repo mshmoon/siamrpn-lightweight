@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import torch.functional as F
+import torch.nn.functional as F
 
 class LogSoftMax(nn.Module):
     def __init__(self):
@@ -10,7 +10,7 @@ class LogSoftMax(nn.Module):
         b,a2,h,w=cls.size()
         cls=cls.view(b,2,a2//2,h,w)
         cls=cls.permute(0,2,3,4,1).contiguous()
-        cls=F.log_softMax(cls,dim=4)
+        cls=F.log_softmax(cls,dim=4)
         return cls
 
 class SelectCrossEntropyLoss(nn.Module):
@@ -44,6 +44,7 @@ class WeightL1Loss(nn.Module):
         super(WeightL1Loss, self).__init__()
 
     def forward(self,pred_loc, label_loc, loss_weight):
+
         b, _, sh, sw = pred_loc.size()
         pred_loc = pred_loc.view(b, 4, -1, sh, sw)
         diff = (pred_loc - label_loc).abs()

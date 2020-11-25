@@ -16,7 +16,7 @@ def build_data_loader(batch,num_workers):
     train_loader = DataLoader(train_dataset,
                               batch_size=batch,
                               num_workers=num_workers,
-                              pin_memory=True,)
+                              pin_memory=False,)
     return train_loader
 def build_optimizer(model,lr_init):
     optimizer = SGD(model.parameters(), lr=lr_init, momentum=0.9, weight_decay=0.0005)
